@@ -6,13 +6,25 @@ import '../model/employee.dart';
 
 class StaffService {
   Future<List<Employee>> fetchEmployees() async {
-    final response = await http.get(Uri.parse("${AppConstants.baseUrl}/staff/get_employee.php"));
+    try {
+      final response = await http.get(Uri.parse("${AppConstants.baseUrl}/staff/get_employee.php"));
 
-    if (response.statusCode == 200) {
-      List data = json.decode(response.body);
-      return data.map((item) => Employee.fromJson(item)).toList();
-    } else {
-      throw Exception('Failed to load staff');
+      print("Staff API Status: ${response.statusCode}");
+      print("Staff API Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        // Check if response is valid JSON (not HTML error)
+        if (response.body.trim().startsWith('<')) {
+          throw Exception('Server returned HTML error instead of JSON. Check PHP logs.');
+        }
+        List data = json.decode(response.body);
+        return data.map((item) => Employee.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load staff: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Staff fetch error: $e");
+      rethrow;
     }
   }
 
