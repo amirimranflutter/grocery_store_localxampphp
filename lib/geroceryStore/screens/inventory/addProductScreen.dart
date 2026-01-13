@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/appColors.dart';
 import '../../services/product_service.dart';
 import '../../model/category.dart';
-import '../../model/api_response.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -178,7 +177,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         border:
             OutlineInputBorder(), // Added border to see the click area better
       ),
-      value: _selectedCategory, // Must match a value in the list exactly
+      initialValue: _selectedCategory, // Must match a value in the list exactly
       isExpanded: true, // IMPORTANT: Makes it easier to click
       items: _categories.map((category) {
         return DropdownMenuItem<String>(
