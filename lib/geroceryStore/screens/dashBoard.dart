@@ -10,135 +10,162 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 900;
+    final isTablet = screenWidth > 600 && screenWidth <= 900;
+    
+    // Responsive grid columns
+    int crossAxisCount = 2;
+    if (isDesktop) {
+      crossAxisCount = 4;
+    } else if (isTablet) {
+      crossAxisCount = 3;
+    }
+    
+    // Responsive max width for content
+    final maxContentWidth = isDesktop ? 1200.0 : double.infinity;
+
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // Custom Header
-            SliverToBoxAdapter(
-              child: _buildHeader(context),
-            ),
-            // Menu Section Title
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
-                child: Text(
-                  'Quick Actions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: CustomScrollView(
+              slivers: [
+                // Custom Header
+                SliverToBoxAdapter(
+                  child: _buildHeader(context, isDesktop),
+                ),
+                // Menu Section Title
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      isDesktop ? 32 : 20, 
+                      24, 
+                      isDesktop ? 32 : 20, 
+                      12
+                    ),
+                    child: const Text(
+                      'Quick Actions',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            // Menu Grid
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.1,
+                // Menu Grid
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isDesktop ? 32 : 20,
+                  ),
+                  sliver: SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: isDesktop ? 1.2 : 1.1,
+                    ),
+                    delegate: SliverChildListDelegate([
+                      _buildMenuCard(
+                        context,
+                        'Inventory',
+                        Icons.inventory_2_rounded,
+                        AppColors.primary,
+                        AppColors.primaryLight,
+                        const InventoryScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'Staff',
+                        Icons.people_rounded,
+                        AppColors.secondary,
+                        AppColors.secondaryLight,
+                        const StaffManagementScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'New Sale',
+                        Icons.point_of_sale_rounded,
+                        AppColors.success,
+                        const Color(0xFF69F0AE),
+                        const CheckoutScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'Reports',
+                        Icons.bar_chart_rounded,
+                        AppColors.accent,
+                        const Color(0xFFFFD54F),
+                        const SalesSummaryScreen(),
+                      ),
+                    ]),
+                  ),
                 ),
-                delegate: SliverChildListDelegate([
-                  _buildMenuCard(
-                    context,
-                    'Inventory',
-                    Icons.inventory_2_rounded,
-                    AppColors.primary,
-                    AppColors.primaryLight,
-                    const InventoryScreen(),
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'Staff',
-                    Icons.people_rounded,
-                    AppColors.secondary,
-                    AppColors.secondaryLight,
-                    const StaffManagementScreen(),
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'New Sale',
-                    Icons.point_of_sale_rounded,
-                    AppColors.success,
-                    const Color(0xFF69F0AE),
-                    const CheckoutScreen(),
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'Reports',
-                    Icons.bar_chart_rounded,
-                    AppColors.accent,
-                    const Color(0xFFFFD54F),
-                    const SalesSummaryScreen(),
-                  ),
-                ]),
-              ),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              ],
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, bool isDesktop) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+      padding: EdgeInsets.all(isDesktop ? 32 : 20),
+      margin: isDesktop 
+          ? const EdgeInsets.fromLTRB(32, 16, 32, 0) 
+          : EdgeInsets.zero,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.primary, AppColors.primaryDark],
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hey, Umar 👋',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Welcome back to your store',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.85),
-                    ),
-                  ),
-                ],
+        borderRadius: isDesktop
+            ? BorderRadius.circular(24)
+            : const BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
               ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.store_rounded,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hey, Umar 👋',
+                style: TextStyle(
+                  fontSize: isDesktop ? 32 : 26,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Welcome back to your store',
+                style: TextStyle(
+                  fontSize: isDesktop ? 16 : 14,
+                  color: Colors.white.withValues(alpha: 0.85),
                 ),
               ),
             ],
+          ),
+          Container(
+            padding: EdgeInsets.all(isDesktop ? 16 : 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              Icons.store_rounded,
+              color: Colors.white,
+              size: isDesktop ? 36 : 28,
+            ),
           ),
         ],
       ),
