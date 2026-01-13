@@ -27,11 +27,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
       appBar: AppBar(title: const Text('Inventory')),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (contaxt) => AddProductScreen()),
+            MaterialPageRoute(builder: (context) => const AddProductScreen()),
           );
+          // Refresh the list if a product was added
+          if (result == true) {
+            setState(() {
+              _products = ProductService().fetchAllProducts();
+            });
+          }
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
