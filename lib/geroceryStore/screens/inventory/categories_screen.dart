@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grocerystore_local/geroceryStore/model/category.dart';
 import 'package:grocerystore_local/geroceryStore/services/product_service.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-import '../../core/appConstant.dart';
 
 class CategoryListScreen extends StatefulWidget {
   const CategoryListScreen({super.key});
@@ -13,12 +10,11 @@ class CategoryListScreen extends StatefulWidget {
 }
 
 class _CategoryListScreenState extends State<CategoryListScreen> {
-  late Future<List<dynamic>> _categoriesFuture;
+  late Future<List<StoreCategory>> _categoriesFuture;
 
   @override
   void initState() {
     super.initState();
-    // 2. Initialize the future when the screen starts
     _categoriesFuture = ProductService().fetchAllCategories();
   }
 
@@ -26,7 +22,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Product Categories")),
-      body: FutureBuilder<List<dynamic>>(
+      body: FutureBuilder<List<StoreCategory>>(
         future: _categoriesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -40,20 +36,20 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
           return GridView.builder(
             padding: const EdgeInsets.all(10),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2 cards per row
+              crossAxisCount: 2,
               childAspectRatio: 3 / 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              var category = snapshot.data![index];
+              final category = snapshot.data![index];
               return Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: Center(
                   child: Text(
-                    category['cat_name'].toString().toUpperCase(),
+                    category.catName.toUpperCase(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
