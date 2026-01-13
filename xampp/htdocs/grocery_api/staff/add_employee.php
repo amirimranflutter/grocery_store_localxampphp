@@ -9,15 +9,18 @@ $db   = "grocerystore";
 
 $conn = new mysqli($host, $user, $pass, $db);
 
-// Get the data sent from your Flutter app
-// Note: We use the same keys you defined in Flutter: "empName" and "empSalary"
+if ($conn->connect_error) {
+    echo json_encode(["status" => "error", "message" => "Connection failed"]);
+    exit;
+}
+
 $name   = $_POST['empName'];
 $salary = $_POST['empSalary'];
 
-// We don't include empid here because it's Auto-Increment
-$sql = "INSERT INTO employee (empName, empSalary) VALUES ('$name', '$salary')";
+$stmt = $conn->prepare("INSERT INTO employees (emp_name, emp_salary) VALUES (?, ?)");
+$stmt->bind_param("sd", $name, $salary);
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->execute()) {
     echo json_encode(["status" => "success", "message" => "Added successfully"]);
 } else {
     echo json_encode(["status" => "error", "message" => $conn->error]);
