@@ -5,12 +5,11 @@ class Employee {
 
   Employee({required this.id, required this.name, required this.salary});
 
-  // Convert JSON from PHP into a Flutter Object
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-      id: json['empid'].toString(),
-      name: json['empName'],
-      salary: json['empSalary'].toString(),
+      id: json['emp_id'].toString(),
+      name: json['emp_name'] ?? 'Unknown',
+      salary: json['emp_salary'].toString(),
     );
   }
 }

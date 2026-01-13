@@ -1,23 +1,18 @@
 <?php
-// Suppress all error output to prevent HTML contamination
 error_reporting(0);
 ini_set('display_errors', 0);
 
-// Set proper headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 try {
-    // Database connection parameters
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "grocery_store";
+    $dbname = "grocerystore";
     
-    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
     
-    // Check connection
     if ($conn->connect_error) {
         http_response_code(500);
         echo json_encode([
@@ -27,11 +22,9 @@ try {
         exit;
     }
     
-    // Set charset
     $conn->set_charset("utf8");
     
-    // Execute query - adjust table/column names to match your database
-    $sql = "SELECT empid, empName, empSalary FROM employees";
+    $sql = "SELECT emp_id, emp_name, emp_salary FROM employees ORDER BY emp_id DESC";
     $result = $conn->query($sql);
     
     if (!$result) {
@@ -43,17 +36,15 @@ try {
         exit;
     }
     
-    // Fetch results
     $employees = [];
     while($row = $result->fetch_assoc()) {
         $employees[] = [
-            "empid" => $row['empid'],
-            "empName" => $row['empName'],
-            "empSalary" => $row['empSalary']
+            "emp_id" => (int)$row['emp_id'],
+            "emp_name" => $row['emp_name'],
+            "emp_salary" => (float)$row['emp_salary']
         ];
     }
     
-    // Return as JSON array (not wrapped in status object since your Flutter code expects a direct array)
     echo json_encode($employees);
     
     $conn->close();
