@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:grocerystore_local/geroceryStore/core/appColors.dart';
 import 'package:grocerystore_local/geroceryStore/model/product.dart';
-import 'package:grocerystore_local/geroceryStore/screens/inventory/categories_screen.dart';
 import 'package:grocerystore_local/geroceryStore/services/product_service.dart';
+
+import 'addProductScreen.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -29,8 +30,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            // MaterialPageRoute(builder: (contaxt) => AddProductScreen()),
-            MaterialPageRoute(builder: (contaxt) => CategoryListScreen()),
+            MaterialPageRoute(builder: (contaxt) => AddProductScreen()),
           );
         },
         child: const Icon(Icons.add, color: Colors.white),
@@ -80,7 +80,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(

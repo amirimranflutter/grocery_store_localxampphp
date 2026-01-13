@@ -13,7 +13,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grocery Pro Manager'),
+        title: const Text('Grocery Manager'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
