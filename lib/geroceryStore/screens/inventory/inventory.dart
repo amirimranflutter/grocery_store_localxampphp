@@ -23,6 +23,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 900;
+    final isTablet = screenWidth > 600 && screenWidth <= 900;
+    final maxContentWidth = isDesktop ? 1000.0 : double.infinity;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -62,11 +67,34 @@ class _InventoryScreenState extends State<InventoryScreen> {
             return const Center(child: Text('No products found.'));
           }
 
+          // Grid for desktop/tablet, list for mobile
+          if (isDesktop || isTablet) {
+            final crossAxisCount = isDesktop ? 3 : 2;
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxContentWidth),
+                child: GridView.builder(
+                  padding: EdgeInsets.all(isDesktop ? 24 : 16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: isDesktop ? 2.2 : 1.8,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    return _buildProductCard(products[index], isDesktop);
+                  },
+                ),
+              ),
+            );
+          }
+
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: products.length,
             itemBuilder: (context, index) {
-              return _buildProductCard(products[index]);
+              return _buildProductCard(products[index], false);
             },
           );
         },
@@ -74,7 +102,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
-  Widget _buildProductCard(Product product) {
+  Widget _buildProductCard(Product product, bool isDesktop) {
     final isLowStock = product.stock < 10;
     final isOutOfStock = product.stock == 0;
     
@@ -85,7 +113,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             : AppColors.success;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: isDesktop ? EdgeInsets.zero : const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
@@ -120,6 +148,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     product.name,
@@ -128,6 +157,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       fontSize: 16,
                       color: AppColors.textPrimary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
                   Container(
@@ -151,6 +182,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             // Price & Stock
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   '\$${product.price.toStringAsFixed(2)}',
