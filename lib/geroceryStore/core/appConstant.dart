@@ -1,6 +1,6 @@
 class AppConstants {
   // API Configuration
-  static const String ipAddress = "192.168.1.20"; // Update this per your ipconfig
+  static const String ipAddress = "192.168.1.128"; // Update this per your ipconfig
   static const String baseUrl = "http://$ipAddress/grocery_api";
 
   // Endpoints

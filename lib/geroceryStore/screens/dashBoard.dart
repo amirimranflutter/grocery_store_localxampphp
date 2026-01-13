@@ -14,9 +14,6 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Grocery Pro Manager'),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none)),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -49,7 +46,7 @@ class DashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hey, Amir 👋',
+          'Hey, User 👋',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
         ),
         Text(
@@ -78,7 +75,7 @@ class DashboardScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 32),
