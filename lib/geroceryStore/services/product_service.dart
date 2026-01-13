@@ -24,6 +24,7 @@ class ProductService {
       return []; // Return empty list on error
     }
   }
+
   Future<List<StoreCategory>> fetchAllCategories() async {
     try {
       final response = await http.get(
@@ -96,6 +97,25 @@ class ProductService {
       );
       return response.statusCode == 200;
     } catch (e) {
+      return false;
+    }
+  }
+
+  // Delete a product
+  Future<bool> deleteProduct(String id) async {
+    try {
+      final response = await http.post(
+        Uri.parse("${AppConstants.baseUrl}/products/delete_product.php"),
+        body: {"p_id": id},
+      );
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['success'] == true;
+      }
+      return false;
+    } catch (e) {
+      print("Delete error: $e");
       return false;
     }
   }

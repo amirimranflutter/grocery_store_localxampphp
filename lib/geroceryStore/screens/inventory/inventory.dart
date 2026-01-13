@@ -203,9 +203,67 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 ),
               ],
             ),
+            const SizedBox(width: 12),
+            // Delete Button
+            IconButton(
+              onPressed: () => _showDeleteDialog(product),
+              icon: const Icon(Icons.delete_outline_rounded),
+              color: AppColors.error,
+              tooltip: 'Delete product',
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _showDeleteDialog(Product product) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text('Are you sure you want to delete "${product.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _deleteProduct(product);
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteProduct(Product product) async {
+    final success = await ProductService().deleteProduct(product.id);
+    if (success) {
+      setState(() {
+        _products = ProductService().fetchAllProducts();
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${product.name} deleted'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to delete product'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 }
