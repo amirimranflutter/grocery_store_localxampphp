@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grocerystore_local/geroceryStore/screens/sales/sale_summary.dart';
 import 'package:grocerystore_local/geroceryStore/screens/staff/staff_management.dart';
 import '../core/appColors.dart';
-import 'checkout_screen.dart';
 import 'inventory/inventory.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -84,22 +82,22 @@ class DashboardScreen extends StatelessWidget {
                         AppColors.secondaryLight,
                         const StaffManagementScreen(),
                       ),
-                      _buildMenuCard(
-                        context,
-                        'New Sale',
-                        Icons.point_of_sale_rounded,
-                        AppColors.success,
-                        const Color(0xFF69F0AE),
-                        const CheckoutScreen(),
-                      ),
-                      _buildMenuCard(
-                        context,
-                        'Reports',
-                        Icons.bar_chart_rounded,
-                        AppColors.accent,
-                        const Color(0xFFFFD54F),
-                        const SalesSummaryScreen(),
-                      ),
+                      // _buildMenuCard(
+                      //   context,
+                      //   'New Sale',
+                      //   Icons.point_of_sale_rounded,
+                      //   AppColors.success,
+                      //   const Color(0xFF69F0AE),
+                      //   const CheckoutScreen(),
+                      // ),
+                      // _buildMenuCard(
+                      //   context,
+                      //   'Reports',
+                      //   Icons.bar_chart_rounded,
+                      //   AppColors.accent,
+                      //   const Color(0xFFFFD54F),
+                      //   const SalesSummaryScreen(),
+                      // ),
                     ]),
                   ),
                 ),
