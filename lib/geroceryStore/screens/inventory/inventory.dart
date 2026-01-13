@@ -46,32 +46,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
             return const Center(child: Text('No response from server.'));
           }
 
-          final response = snapshot.data!;
+          final products = snapshot.data ?? null;
 
-          // Handle API response
+          if(products == null) return SizedBox();
 
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+          if (products.isEmpty) {
+            return const Center(child: Text('No products found.'));
+          }
 
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _products = ProductService().fetchAllProducts();
-                      });
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-
-
-
-
-
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return _buildProductCard(products[index]);
+            },
+          );
         },
       ),
     );
