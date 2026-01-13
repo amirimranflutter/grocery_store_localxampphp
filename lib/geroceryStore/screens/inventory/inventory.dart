@@ -24,7 +24,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Inventory')),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Inventory'),
+        elevation: 0,
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () async {
@@ -32,7 +36,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
             context,
             MaterialPageRoute(builder: (context) => const AddProductScreen()),
           );
-          // Refresh the list if a product was added
           if (result == true) {
             setState(() {
               _products = ProductService().fetchAllProducts();
@@ -45,18 +48,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
         future: _products,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
             return const Center(child: Text('No response from server.'));
           }
 
-          final products = snapshot.data ?? null;
-
-          if(products == null) return SizedBox();
-
-          if (products.isEmpty) {
+          final products = snapshot.data;
+          if (products == null || products.isEmpty) {
             return const Center(child: Text('No products found.'));
           }
 
@@ -73,28 +75,48 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Widget _buildProductCard(Product product) {
-    // Professional touch: Stock warning color
-    Color stockColor = product.stock < 10 ? AppColors.error : AppColors.success;
+    final isLowStock = product.stock < 10;
+    final isOutOfStock = product.stock == 0;
+    
+    Color stockColor = isOutOfStock 
+        ? AppColors.error 
+        : isLowStock 
+            ? AppColors.warning 
+            : AppColors.success;
 
-    return Card(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            // Placeholder for Product Image
+            // Product Icon
             Container(
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
-                Icons.shopping_basket,
+                Icons.shopping_basket_rounded,
                 color: AppColors.primary,
+                size: 28,
               ),
             ),
             const SizedBox(width: 16),
+            // Product Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,32 +124,31 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   Text(
                     product.name,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  // Category Chip
+                  const SizedBox(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(4),
+                      color: AppColors.secondary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       product.categoryName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade700,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+            // Price & Stock
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -135,10 +156,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   '\$${product.price.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 16,
                     color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   'Stock: ${product.stock}',
                   style: TextStyle(

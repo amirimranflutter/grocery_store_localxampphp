@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocerystore_local/geroceryStore/core/appConstant.dart';
 import 'appColors.dart';
 
 class AppTheme {
@@ -64,7 +63,6 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 4,
-        shape: CircleBorder(),
       ),
 
       // Elevated Button
