@@ -6,7 +6,8 @@ ob_clean();
 // Also used 'p_id' and 'p_name' assuming those are your actual DB column names
 $sql = "SELECT p.p_id, p.p_name, p.price, p.stock, p.date, p.cat_id, c.cat_name 
         FROM products p 
-        LEFT JOIN categories c ON p.cat_id = c.cat_id";
+        LEFT JOIN categories c ON p.cat_id = c.cat_id
+        ORDER BY p.p_id DESC";
 $result = $conn->query($sql);
 
 $products = array();
