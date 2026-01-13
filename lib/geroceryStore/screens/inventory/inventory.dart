@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocerystore_local/geroceryStore/core/appColors.dart';
 import 'package:grocerystore_local/geroceryStore/model/product.dart';
-import 'package:grocerystore_local/geroceryStore/model/api_response.dart';
 import 'package:grocerystore_local/geroceryStore/screens/inventory/categories_screen.dart';
 import 'package:grocerystore_local/geroceryStore/services/product_service.dart';
 
