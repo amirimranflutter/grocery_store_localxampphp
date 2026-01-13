@@ -143,11 +143,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget _buildCategoryDropdown() {
     // 1. Prevent opening if the list hasn't loaded yet
     if (_categories.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(),
+      return DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+          labelText: "Select Category",
+          prefixIcon: Icon(Icons.category),
+          border:
+          OutlineInputBorder(), // Added border to see the click area better
         ),
+        initialValue: null, // Must match a value in the list exactly
+        isExpanded: true, // IMPORTANT: Makes it easier to click
+        items: [],
+        onChanged: (val) {
+          setState(() {
+            _selectedCategory = val;
+          });
+          print("Selected Category ID: $val");
+        },
+        validator: (v) => v == null ? "Select a category" : null,
       );
     }
 
