@@ -25,6 +25,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       _staffList = StaffService().fetchEmployees();
     });
   }
+
   Future<bool?> _showDeleteDialog(BuildContext context, String name) {
     return showDialog<bool>(
       context: context,
@@ -44,6 +45,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,6 +136,29 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       backgroundColor: Colors.blue.shade100,
                       child: Text(employee.name.isNotEmpty ? employee.name[0] : "?"),
                     ),
+                    trailing: IconButton(onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Confirm Delete"),
+                          content: Text("Are you sure you want to remove ${employee.name} from the staff list?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await StaffService().deleteEmployee(employee.id);
+                                _loadStaff();
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      );
+                    }, icon: Icon(Icons.delete, color: Colors.red,)),
                   ),
                 ),
               );
