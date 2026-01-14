@@ -153,7 +153,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                                 _loadStaff();
                                 Navigator.pop(context);
                               },
-                              child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                              child: const Text("Remove", style: TextStyle(color: Colors.red)),
                             ),
                           ],
                         ),
