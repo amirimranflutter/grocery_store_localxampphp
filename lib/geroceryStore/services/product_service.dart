@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:grocerystore_local/geroceryStore/model/category.dart';
 import 'package:grocerystore_local/geroceryStore/model/product.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +10,9 @@ class ProductService {
   Future<List<Product>> fetchAllProducts() async {
     try {
       final response = await http.get(Uri.parse(AppConstants.getProducts));
+
+      print("Product API Status: ${response.statusCode}");
+      print("Product API Body: ${response.body}");
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
