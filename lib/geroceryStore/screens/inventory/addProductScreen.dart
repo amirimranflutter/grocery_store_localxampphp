@@ -16,6 +16,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _nameCtrl = TextEditingController();
   final _priceCtrl = TextEditingController();
   final _stockCtrl = TextEditingController();
+  final _quanCtrl = TextEditingController();
   final _dateController = TextEditingController();
 
   String? _selectedCategory; // Holds the ID of selected category
@@ -53,7 +54,53 @@ class _AddProductScreenState extends State<AddProductScreen> {
       });
     }
   }
+// Inside _AddProductScreenState
+  bool _isSaving = false; // Added to track saving state
 
+  void _handleSave() async {
+    if (_formKey.currentState!.validate()) {
+      // 1. Check if category is actually selected to avoid null error
+      if (_selectedCategory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a category")),
+        );
+        return;
+      }
+
+      setState(() => _isSaving = true);
+
+      // 2. Call the service with clean data
+      bool ok = await ProductService().addProduct(
+        _nameCtrl.text.trim(),
+        _priceCtrl.text.trim(),
+        _stockCtrl.text.trim(),
+        _quanCtrl.text.trim(),
+        _selectedCategory!, // This should be the ID string (e.g., "1")
+        _dateController.text,
+      );
+
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+
+      if (ok) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Product Saved Successfully!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context, true); // Success: Go back and refresh list
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to save. Check Console for Error details."),
+            backgroundColor: Color(0xFFC73E3E), // Your Primary Red
+          ),
+        );
+        print("Failed to save. Check Console for Error details.");
+      }
+    }
+  }
   void _fetchCats() async {
     final data = await ProductService().fetchAllCategories();
     setState(() => _categories = data);
@@ -61,7 +108,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Product Form')),
+      appBar: AppBar(title: const Text('ADD Product NEW')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -77,6 +124,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
               _buildInput(
                 _stockCtrl,
                 "Initial Stock",
+                Icons.inventory,
+                isNum: true,
+              ),
+              const SizedBox(height: 15), _buildInput(
+                _quanCtrl,
+                "qantity",
                 Icons.inventory,
                 isNum: true,
               ),
@@ -102,18 +155,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                   ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      bool ok = await ProductService().addProduct(
-                        _nameCtrl.text,
-                        _priceCtrl.text,
-                        _stockCtrl.text,
-                        _selectedCategory!,
-                        _dateController.text,
-                      );
-                      if (ok) Navigator.pop(context, true);
-                    }
-                  },
+                  onPressed:  _isSaving ? null : _handleSave,
                   child: const Text(
                     "Save Product",
                     style: TextStyle(color: Colors.white),

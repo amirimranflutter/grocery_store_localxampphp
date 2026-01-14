@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocerystore_local/geroceryStore/core/appColors.dart';
 import 'package:grocerystore_local/geroceryStore/model/product.dart';
-import 'package:grocerystore_local/geroceryStore/model/api_response.dart';
-import 'package:grocerystore_local/geroceryStore/screens/inventory/categories_screen.dart';
+import 'package:grocerystore_local/geroceryStore/screens/inventory/addProductScreen.dart';
 import 'package:grocerystore_local/geroceryStore/services/product_service.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -27,12 +26,22 @@ class _InventoryScreenState extends State<InventoryScreen> {
       appBar: AppBar(title: const Text('Inventory')),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
-        onPressed: () {
-          Navigator.push(
+        // Inside InventoryScreen.dart
+        // Inside InventoryScreen.dart
+        onPressed: () async {
+          // 1. Wait for the user to finish adding a product
+          final refreshNeeded = await Navigator.push(
             context,
-            // MaterialPageRoute(builder: (contaxt) => AddProductScreen()),
-            MaterialPageRoute(builder: (contaxt) => CategoryListScreen()),
+            MaterialPageRoute(builder: (context) => const AddProductScreen()),
           );
+
+          // 2. If the user saved a product (returned true), refresh the list
+          if (refreshNeeded == true) {
+            setState(() {
+              // Re-run the fetch function to get the latest data from PHP
+              _products = ProductService().fetchAllProducts();
+            });
+          }
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -43,36 +52,22 @@ class _InventoryScreenState extends State<InventoryScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('No response from server.'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No products found in inventory.'));
           }
 
-          final response = snapshot.data!;
+          // 1. Get the list of products from snapshot
+          final productList = snapshot.data!;
 
-          // Handle API response
-
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _products = ProductService().fetchAllProducts();
-                      });
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-
-
-
-
-
+          // 2. Return a ListView to actually SHOW the cards
+          return ListView.builder(
+            padding: const EdgeInsets.all(10),
+            itemCount: productList.length,
+            itemBuilder: (context, index) {
+              // 3. Call your custom _buildProductCard widget here
+              return _buildProductCard(productList[index]);
+            },
+          );
         },
       ),
     );
@@ -124,7 +119,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      product.categoryName,
+                      product.catId.toString(),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade700,

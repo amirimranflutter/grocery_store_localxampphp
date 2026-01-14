@@ -37,35 +37,39 @@ class CategoryService {
         if (response.statusCode == 200) {
           try {
             // Use ErrorHandler for robust JSON parsing
-            final categories = ErrorHandler.parseApiResponse<List<StoreCategory>>(
-              response.body,
-              (data) {
-                // Handle new standardized response format
-                if (data is Map<String, dynamic> && data.containsKey('data')) {
-                  final categoryData = data['data'];
-                  if (categoryData is List) {
-                    return categoryData
-                        .map((item) => StoreCategory.fromJson(item))
-                        .toList();
-                  } else if (categoryData is Map<String, dynamic>) {
-                    return [StoreCategory.fromJson(categoryData)];
-                  }
-                }
-                // Handle legacy direct array format
-                else if (data is List) {
-                  return data.map((item) => StoreCategory.fromJson(item)).toList();
-                } else if (data is Map<String, dynamic>) {
-                  // Handle single category response
-                  return [StoreCategory.fromJson(data)];
-                } else {
-                  throw ApiException(
-                    'Invalid data format received from server',
-                  );
-                }
-                return <StoreCategory>[];
-              },
-              context: 'CategoryService.fetchCategories',
-            );
+            final categories =
+                ErrorHandler.parseApiResponse<List<StoreCategory>>(
+                  response.body,
+                  (data) {
+                    // Handle new standardized response format
+                    if (data is Map<String, dynamic> &&
+                        data.containsKey('data')) {
+                      final categoryData = data['data'];
+                      if (categoryData is List) {
+                        return categoryData
+                            .map((item) => StoreCategory.fromJson(item))
+                            .toList();
+                      } else if (categoryData is Map<String, dynamic>) {
+                        return [StoreCategory.fromJson(categoryData)];
+                      }
+                    }
+                    // Handle legacy direct array format
+                    else if (data is List) {
+                      return data
+                          .map((item) => StoreCategory.fromJson(item))
+                          .toList();
+                    } else if (data is Map<String, dynamic>) {
+                      // Handle single category response
+                      return [StoreCategory.fromJson(data)];
+                    } else {
+                      throw ApiException(
+                        'Invalid data format received from server',
+                      );
+                    }
+                    return <StoreCategory>[];
+                  },
+                  context: 'CategoryService.fetchCategories',
+                );
 
             return ApiResponse.success(categories ?? [], response.statusCode);
           } catch (e) {
@@ -160,6 +164,114 @@ class CategoryService {
         return 'Request timed out. Please try again.';
       default:
         return 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  /// Add a new category
+  Future<ApiResponse<bool>> addCategory(String categoryName) async {
+    try {
+      final url = "${AppConstants.baseUrl}/products/add_category.php";
+
+      ErrorHandler.logApiRequest(url);
+
+      final response = await http
+          .post(Uri.parse(url), body: {"cat_name": categoryName})
+          .timeout(_requestTimeout);
+
+      ErrorHandler.logApiResponse(response.statusCode, response.body, url: url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true) {
+          return ApiResponse.success(true, response.statusCode);
+        } else {
+          return ApiResponse.error(
+            data['message'] ?? 'Failed to add category',
+            response.statusCode,
+          );
+        }
+      } else {
+        return ApiResponse.error(
+          _getHttpErrorMessage(response.statusCode),
+          response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error(ErrorHandler.getUserFriendlyError(e), 0);
+    }
+  }
+
+  /// Update an existing category
+  Future<ApiResponse<bool>> updateCategory(
+    int categoryId,
+    String categoryName,
+  ) async {
+    try {
+      final url = "${AppConstants.baseUrl}/products/update_category.php";
+
+      ErrorHandler.logApiRequest(url);
+
+      final response = await http
+          .post(
+            Uri.parse(url),
+            body: {"cat_id": categoryId.toString(), "cat_name": categoryName},
+          )
+          .timeout(_requestTimeout);
+
+      ErrorHandler.logApiResponse(response.statusCode, response.body, url: url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true) {
+          return ApiResponse.success(true, response.statusCode);
+        } else {
+          return ApiResponse.error(
+            data['message'] ?? 'Failed to update category',
+            response.statusCode,
+          );
+        }
+      } else {
+        return ApiResponse.error(
+          _getHttpErrorMessage(response.statusCode),
+          response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error(ErrorHandler.getUserFriendlyError(e), 0);
+    }
+  }
+
+  /// Delete a category
+  Future<ApiResponse<bool>> deleteCategory(int categoryId) async {
+    try {
+      final url = "${AppConstants.baseUrl}/products/delete_category.php";
+
+      ErrorHandler.logApiRequest(url);
+
+      final response = await http
+          .post(Uri.parse(url), body: {"cat_id": categoryId.toString()})
+          .timeout(_requestTimeout);
+
+      ErrorHandler.logApiResponse(response.statusCode, response.body, url: url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true) {
+          return ApiResponse.success(true, response.statusCode);
+        } else {
+          return ApiResponse.error(
+            data['message'] ?? 'Failed to delete category',
+            response.statusCode,
+          );
+        }
+      } else {
+        return ApiResponse.error(
+          _getHttpErrorMessage(response.statusCode),
+          response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error(ErrorHandler.getUserFriendlyError(e), 0);
     }
   }
 }

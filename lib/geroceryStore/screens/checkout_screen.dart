@@ -14,21 +14,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final List<Map<String, dynamic>> _cart = [];
   double _total = 0;
 
-  void _addToCart(Product product) {
-    setState(() {
-      _cart.add({
-        "id": product.id,
-        "name": product.name,
-        "price": product.price,
-        "qty": 1,
-      });
-      _calculateTotal();
-    });
-  }
 
-  void _calculateTotal() {
-    _total = _cart.fold(0, (sum, item) => sum + (item['price'] * item['qty']));
-  }
+
 
   Future<void> _processSale() async {
     if (_cart.isEmpty) return;

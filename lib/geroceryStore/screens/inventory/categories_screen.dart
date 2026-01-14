@@ -52,12 +52,11 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: Center(
-                  child: Text(
-                    category['cat_name'].toString().toUpperCase(),
+                  child:
+                      Text(category.catName.toUpperCase(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              );
+                  ),)
+                );
             },
           );
         },
