@@ -77,7 +77,7 @@ class ProductService {
   Future<bool> addProduct(String name, String price, String stock, String quantity, String catId, String date) async {
     try {
       final response = await http.post(
-        Uri.parse(AppConstants.addProduct),
+        Uri.parse(AppConstants.addProducts),
         body: {
           "p_name": name,
           "price": price,
