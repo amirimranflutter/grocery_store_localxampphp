@@ -120,7 +120,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
@@ -154,8 +154,11 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
             _loadStaff(); // This is the function we made earlier to fetch data
           }
         },
-        label: const Text('Add Staff'),
-        icon: const Icon(Icons.person_add),
+        label: const Text('Add Staff', style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),),
+        icon: const Icon(Icons.person_add, color: Colors.white,),
         backgroundColor: AppColors.primary,
       ),
     );
