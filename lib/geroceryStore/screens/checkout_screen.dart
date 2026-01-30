@@ -131,34 +131,37 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (confirm != true) return;
 
     // Process the sale
-    final success = await _orderService.createOrder(
-      customerId: _selectedCustomer?.customerId,
-      items: _cart,
-      totalAmount: _subtotal,
-      discountAmount: _discount,
-      taxAmount: _tax,
-      finalAmount: _total,
-      paymentMethod: _paymentMethod,
-    );
-
-    if (!mounted) return;
-
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sale completed successfully!'),
-          backgroundColor: AppColors.success,
-        ),
+    try{
+      final success = await _orderService.createOrder(
+        customerId: _selectedCustomer?.customerId,
+        items: _cart,
+        totalAmount: _subtotal,
+        discountAmount: _discount,
+        taxAmount: _tax,
+        finalAmount: _total,
+        paymentMethod: _paymentMethod,
       );
-      setState(() {
-        _cart.clear();
-        _selectedCustomer = null;
-        _calculateTotal();
-      });
-    } else {
+
+      if (!mounted) return;
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sale completed successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        setState(() {
+          _cart.clear();
+          _selectedCustomer = null;
+          _calculateTotal();
+        });
+      }
+    } catch(e) {
+      print('Failed to process sale $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to process sale'),
+        SnackBar(
+          content: Text('Failed to process sale $e'),
           backgroundColor: AppColors.error,
         ),
       );
