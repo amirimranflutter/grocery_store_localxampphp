@@ -93,45 +93,45 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<void> _processSale() async {
-    if (_cart.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cart is empty')),
-      );
-      return;
-    }
+    try{
+      if (_cart.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cart is empty')),
+        );
+        return;
+      }
 
-    // Show confirmation dialog
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Sale'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Customer: ${_selectedCustomer?.customerName ?? "Walk-in"}'),
-            Text('Items: ${_cart.length}'),
-            Text('Total: \$${_total.toStringAsFixed(2)}'),
-            Text('Payment: ${_paymentMethod.toUpperCase()}'),
+      // Show confirmation dialog
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Confirm Sale'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Customer: ${_selectedCustomer?.customerName ?? "Walk-in"}'),
+              Text('Items: ${_cart.length}'),
+              Text('Total: \$${_total.toStringAsFixed(2)}'),
+              Text('Payment: ${_paymentMethod.toUpperCase()}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Confirm'),
+            ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Confirm'),
-          ),
-        ],
-      ),
-    );
+      );
 
     if (confirm != true) return;
 
     // Process the sale
-    try{
       final success = await _orderService.createOrder(
         customerId: _selectedCustomer?.customerId,
         items: _cart,
@@ -156,15 +156,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           _selectedCustomer = null;
           _calculateTotal();
         });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to process sale'),
+            backgroundColor: AppColors.error,
+          ),
+        );
       }
-    } catch(e) {
-      print('Failed to process sale $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to process sale $e'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+    } catch(e){
+      print('Error processing sale: $e');
     }
   }
 
