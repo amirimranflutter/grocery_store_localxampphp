@@ -1,4 +1,11 @@
 <?php
+// ============================================
+// NOTICE: Enhanced Version Available!
+// ============================================
+// This is the basic setup. For the enhanced version with 14 tables
+// and complex relationships, use: setup_database_enhanced.php
+// ============================================
+
 error_reporting(0);
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -101,9 +108,11 @@ $conn->query("INSERT IGNORE INTO products (p_id, p_name, price, stock, date, cat
 
 echo json_encode([
     "status" => "success",
-    "message" => "Database and tables created successfully!",
+    "message" => "Basic database created successfully!",
+    "notice" => "⚠️ For enhanced version with 14 tables and complex relationships, use setup_database_enhanced.php",
     "tables_created" => ["categories", "products", "employees", "orders"],
-    "sample_data" => "Added 5 categories and 5 products"
+    "sample_data" => "Added 5 categories and 5 products",
+    "upgrade_to" => "setup_database_enhanced.php"
 ]);
 
 $conn->close();

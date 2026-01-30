@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Store API - Enhanced Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .stat-card p {
+            color: #666;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .feature-card li:before {
+            content: "✓ ";
+            color: #43e97b;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .footer {
+            background: #2d2d2d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Grocery Store API</h1>
+            <p>Enhanced Database with 14 Interconnected Tables</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>14</h3>
+                <p>Tables</p>
+            </div>
+            <div class="stat-card">
+                <h3>20+</h3>
+                <p>Relationships</p>
+            </div>
+            <div class="stat-card">
+                <h3>15+</h3>
+                <p>API Endpoints</p>
+            </div>
+            <div class="stat-card">
+                <h3>73</h3>
+                <p>Sample Records</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🚀 Quick Start</h2>
+                <div class="button-grid">
+                    <a href="setup_database_enhanced.php" class="btn">1. Setup Database</a>
+                    <a href="test_enhanced_db.php" class="btn btn-secondary">2. Test Database</a>
+                    <a href="http://localhost/phpmyadmin" class="btn btn-success" target="_blank">3. Open phpMyAdmin</a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📡 API Endpoints</h2>
+                <div class="button-grid">
+                    <a href="products/get_products.php" class="btn btn-info">Get Products</a>
+                    <a href="customers/get_customers.php" class="btn btn-info">Get Customers</a>
+                    <a href="orders/get_orders.php" class="btn btn-info">Get Orders</a>
+                    <a href="staff/get_employee.php" class="btn btn-info">Get Employees</a>
+                    <a href="suppliers/get_suppliers.php" class="btn btn-info">Get Suppliers</a>
+                    <a href="promotions/get_promotions.php" class="btn btn-info">Get Promotions</a>
+                    <a href="reports/inventory_report.php" class="btn btn-info">Inventory Report</a>
+                    <a href="reports/sales_summary.php" class="btn btn-info">Sales Summary</a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📚 Documentation</h2>
+                <div class="button-grid">
+                    <a href="README.md" class="btn">README</a>
+                    <a href="DATABASE_STRUCTURE.md" class="btn">Database Structure</a>
+                    <a href="PRESENTATION_GUIDE.md" class="btn">Presentation Guide</a>
+                    <a href="QUICK_REFERENCE.md" class="btn">Quick Reference</a>
+                    <a href="DATABASE_DIAGRAM.txt" class="btn">Database Diagram</a>
+                    <a href="grocery_store_schema.sql" class="btn">SQL Schema</a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 Key Features</h2>
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <h3>Core Tables</h3>
+                        <ul>
+                            <li>Categories</li>
+                            <li>Suppliers</li>
+                            <li>Products (Central Hub)</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>People Management</h3>
+                        <ul>
+                            <li>Customers with Loyalty</li>
+                            <li>Employees with Roles</li>
+                            <li>Contact Information</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Transactions</h3>
+                        <ul>
+                            <li>Orders & Order Items</li>
+                            <li>Payment Tracking</li>
+                            <li>Inventory Movements</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Shopping Cart</h3>
+                        <ul>
+                            <li>Customer Carts</li>
+                            <li>Cart Items</li>
+                            <li>Real-time Updates</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Marketing</h3>
+                        <ul>
+                            <li>Promotions</li>
+                            <li>Product Reviews</li>
+                            <li>Customer Feedback</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Analytics</h3>
+                        <ul>
+                            <li>Sales Reports</li>
+                            <li>Inventory Analysis</li>
+                            <li>Customer Insights</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔗 Database Relationships</h2>
+                <div class="code-block">
+products (Central Hub) connects to:
+├── categories (Many-to-One)
+├── suppliers (Many-to-One)
+├── order_items (One-to-Many)
+├── cart_items (One-to-Many)
+├── promotion_products (One-to-Many)
+├── reviews (One-to-Many)
+└── inventory_transactions (One-to-Many)
+
+customers connect to:
+├── orders (One-to-Many)
+├── cart (One-to-Many)
+└── reviews (One-to-Many)
+
+orders connect to:
+├── customers (Many-to-One)
+├── employees (Many-to-One)
+├── order_items (One-to-Many)
+└── payment_transactions (One-to-Many)
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 Sample Complex Query</h2>
+                <div class="code-block">
+SELECT 
+    o.order_id,
+    c.customer_name,
+    e.emp_name as cashier,
+    p.p_name as product,
+    cat.cat_name as category,
+    s.supplier_name,
+    oi.quantity,
+    oi.subtotal
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN employees e ON o.emp_id = e.emp_id
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.p_id = p.p_id
+JOIN categories cat ON p.cat_id = cat.cat_id
+JOIN suppliers s ON p.supplier_id = s.supplier_id;
+
+-- This query joins 7 tables!
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>✨ Data Integrity Features</h2>
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <h3>Constraints</h3>
+                        <ul>
+                            <li>Foreign Keys</li>
+                            <li>Unique Constraints</li>
+                            <li>Check Constraints</li>
+                            <li>Default Values</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Performance</h3>
+                        <ul>
+                            <li>Primary Key Indexes</li>
+                            <li>Foreign Key Indexes</li>
+                            <li>Query Optimization</li>
+                            <li>Composite Indexes</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Audit Trail</h3>
+                        <ul>
+                            <li>Created Timestamps</li>
+                            <li>Updated Timestamps</li>
+                            <li>Soft Deletes</li>
+                            <li>Transaction History</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎉 Enhanced Grocery Store Database - Perfect for Presentations!</p>
+            <p style="margin-top: 10px; opacity: 0.7;">Made with ❤️ for demonstration purposes</p>
+        </div>
+    </div>
+</body>
+</html>

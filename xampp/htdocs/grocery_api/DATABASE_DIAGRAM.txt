@@ -1,0 +1,228 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    GROCERY STORE DATABASE STRUCTURE                          ║
+║                         14 Tables - 20+ Relationships                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           CORE BUSINESS TABLES                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+    │  SUPPLIERS   │         │ CATEGORIES   │         │  PROMOTIONS  │
+    ├──────────────┤         ├──────────────┤         ├──────────────┤
+    │ supplier_id  │         │ cat_id       │         │ promotion_id │
+    │ supplier_name│         │ cat_name     │         │ promo_name   │
+    │ contact_info │         │ description  │         │ discount_type│
+    │ phone, email │         │ is_active    │         │ start_date   │
+    └──────┬───────┘         └──────┬───────┘         └──────┬───────┘
+           │                        │                        │
+           │                        │                        │
+           └────────────┬───────────┴────────────┬───────────┘
+                        │                        │
+                        ▼                        ▼
+              ┌─────────────────────────────────────────┐
+              │           PRODUCTS (Central Hub)        │
+              ├─────────────────────────────────────────┤
+              │ p_id, p_name, p_description             │
+              │ price, cost_price, stock                │
+              │ barcode, sku, unit, weight              │
+              │ cat_id (FK), supplier_id (FK)           │
+              │ min_stock_level, is_active              │
+              └──┬──────┬──────┬──────┬──────┬──────┬───┘
+                 │      │      │      │      │      │
+        ┌────────┘      │      │      │      │      └────────┐
+        │               │      │      │      │               │
+        ▼               ▼      ▼      ▼      ▼               ▼
+   ┌─────────┐   ┌─────────┐ │  ┌────────┐ │         ┌──────────┐
+   │ REVIEWS │   │  CART   │ │  │PROMO   │ │         │INVENTORY │
+   │         │   │  ITEMS  │ │  │PRODUCTS│ │         │  TRANS   │
+   └─────────┘   └─────────┘ │  └────────┘ │         └──────────┘
+                              │             │
+                              ▼             ▼
+                        ┌──────────┐  ┌──────────┐
+                        │  ORDER   │  │   CART   │
+                        │  ITEMS   │  │          │
+                        └────┬─────┘  └────┬─────┘
+                             │             │
+                             │             │
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            PEOPLE TABLES                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    ┌──────────────────┐                    ┌──────────────────┐
+    │    CUSTOMERS     │                    │    EMPLOYEES     │
+    ├──────────────────┤                    ├──────────────────┤
+    │ customer_id      │                    │ emp_id           │
+    │ customer_name    │                    │ emp_name         │
+    │ email, phone     │                    │ emp_role         │
+    │ address, city    │                    │ emp_phone        │
+    │ loyalty_points   │                    │ emp_salary       │
+    │ total_purchases  │                    │ hire_date        │
+    └────┬─────┬───┬───┘                    └────┬─────┬───────┘
+         │     │   │                             │     │
+         │     │   └─────────────────┐           │     │
+         │     │                     │           │     │
+         ▼     ▼                     ▼           ▼     ▼
+    ┌────────┐ ┌────────┐      ┌─────────┐  ┌──────┐ ┌──────────┐
+    │ ORDERS │ │  CART  │      │ REVIEWS │  │ORDERS│ │INVENTORY │
+    │        │ │        │      │         │  │      │ │  TRANS   │
+    └────────┘ └────────┘      └─────────┘  └──────┘ └──────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         TRANSACTION FLOW                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    CUSTOMER                                              EMPLOYEE
+       │                                                     │
+       │ 1. Browse Products                                 │
+       ▼                                                     │
+    ┌──────────┐                                            │
+    │ PRODUCTS │                                            │
+    └────┬─────┘                                            │
+         │                                                  │
+         │ 2. Add to Cart                                   │
+         ▼                                                  │
+    ┌──────────┐                                            │
+    │   CART   │                                            │
+    │   ITEMS  │                                            │
+    └────┬─────┘                                            │
+         │                                                  │
+         │ 3. Checkout                                      │
+         ▼                                                  ▼
+    ┌─────────────────────────────────────────────────────────┐
+    │                      ORDERS                             │
+    │  (Links: customer_id, emp_id)                          │
+    └──────────────────┬──────────────────────────────────────┘
+                       │
+         ┌─────────────┼─────────────┐
+         ▼             ▼             ▼
+    ┌──────────┐  ┌──────────┐  ┌──────────┐
+    │  ORDER   │  │ PAYMENT  │  │ INVENTORY│
+    │  ITEMS   │  │  TRANS   │  │  UPDATE  │
+    └──────────┘  └──────────┘  └──────────┘
+         │
+         │ 4. Later...
+         ▼
+    ┌──────────┐
+    │ REVIEWS  │
+    └──────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RELATIONSHIP SUMMARY                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+PRODUCTS (Central Hub) - Connects to 7 tables:
+  ├─→ categories (Many-to-One)
+  ├─→ suppliers (Many-to-One)
+  ├─→ order_items (One-to-Many)
+  ├─→ cart_items (One-to-Many)
+  ├─→ promotion_products (One-to-Many)
+  ├─→ reviews (One-to-Many)
+  └─→ inventory_transactions (One-to-Many)
+
+CUSTOMERS - Connects to 3 tables:
+  ├─→ orders (One-to-Many)
+  ├─→ cart (One-to-Many)
+  └─→ reviews (One-to-Many)
+
+ORDERS - Connects to 4 tables:
+  ├─→ customers (Many-to-One)
+  ├─→ employees (Many-to-One)
+  ├─→ order_items (One-to-Many)
+  └─→ payment_transactions (One-to-Many)
+
+EMPLOYEES - Connects to 2 tables:
+  ├─→ orders (One-to-Many)
+  └─→ inventory_transactions (One-to-Many)
+
+CART - Connects to 2 tables:
+  ├─→ customers (Many-to-One)
+  └─→ cart_items (One-to-Many)
+
+PROMOTIONS - Connects to 1 table:
+  └─→ promotion_products (One-to-Many)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      JUNCTION TABLES (Many-to-Many)                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. ORDER_ITEMS
+   ├─→ orders (order_id)
+   └─→ products (p_id)
+   Purpose: Links orders with products, stores quantity and price
+
+2. CART_ITEMS
+   ├─→ cart (cart_id)
+   └─→ products (p_id)
+   Purpose: Links shopping carts with products
+
+3. PROMOTION_PRODUCTS
+   ├─→ promotions (promotion_id)
+   └─→ products (p_id)
+   Purpose: Links promotions with applicable products
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         DATA INTEGRITY FEATURES                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✓ Foreign Key Constraints:     All relationships enforced
+✓ Cascade Deletes:             cart_items, order_items, promotion_products
+✓ Restrict Deletes:            Products with order history protected
+✓ Unique Constraints:          Email, barcode, SKU
+✓ Check Constraints:           Rating (1-5)
+✓ Default Values:              Timestamps, status fields
+✓ Indexes:                     All PKs, FKs, and query fields
+✓ Soft Deletes:                is_active flags
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SAMPLE QUERY COMPLEXITY                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Simple Query (1 table):
+  SELECT * FROM products;
+
+Medium Query (3 tables):
+  SELECT p.*, c.cat_name, s.supplier_name
+  FROM products p
+  JOIN categories c ON p.cat_id = c.cat_id
+  JOIN suppliers s ON p.supplier_id = s.supplier_id;
+
+Complex Query (7 tables):
+  SELECT o.order_id, c.customer_name, e.emp_name,
+         p.p_name, cat.cat_name, s.supplier_name, oi.quantity
+  FROM orders o
+  JOIN customers c ON o.customer_id = c.customer_id
+  JOIN employees e ON o.emp_id = e.emp_id
+  JOIN order_items oi ON o.order_id = oi.order_id
+  JOIN products p ON oi.p_id = p.p_id
+  JOIN categories cat ON p.cat_id = cat.cat_id
+  JOIN suppliers s ON p.supplier_id = s.supplier_id;
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            TABLE STATISTICS                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Table Name              Records    Purpose
+─────────────────────────────────────────────────────────────────────────────
+categories              8          Product categorization
+suppliers               4          Supplier management
+products                10         Inventory items
+employees               4          Staff management
+customers               5          Customer database
+orders                  5          Sales transactions
+order_items             13         Order line items
+cart                    3          Shopping carts
+cart_items              6          Cart contents
+promotions              2          Marketing campaigns
+promotion_products      4          Promoted items
+reviews                 4          Customer feedback
+payment_transactions    5          Payment records
+inventory_transactions  0          Stock tracking (ready)
+─────────────────────────────────────────────────────────────────────────────
+TOTAL:                  73 records across 14 tables
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  This structure demonstrates enterprise-level database design principles    ║
+║  Perfect for presentations, portfolios, and real-world applications!        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
