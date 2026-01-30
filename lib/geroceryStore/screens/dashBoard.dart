@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:grocerystore_local/geroceryStore/screens/staff/staff_management.dart';
 import '../core/appColors.dart';
 import 'inventory/inventory.dart';
+import 'customers/customers_screen.dart';
+import 'orders/orders_screen.dart';
+import 'analytics/analytics_screen.dart';
+import 'checkout_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -72,32 +76,48 @@ class DashboardScreen extends StatelessWidget {
                         Icons.inventory_2_rounded,
                         AppColors.primary,
                         AppColors.primaryLight,
-                        const InventoryScreen(),
+                        InventoryScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'Customers',
+                        Icons.people_rounded,
+                        const Color(0xFF9C27B0),
+                        const Color(0xFFCE93D8),
+                        CustomersScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'Orders',
+                        Icons.receipt_long_rounded,
+                        const Color(0xFF2196F3),
+                        const Color(0xFF64B5F6),
+                        OrdersScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'New Sale',
+                        Icons.point_of_sale_rounded,
+                        AppColors.success,
+                        const Color(0xFF69F0AE),
+                        CheckoutScreen(),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        'Analytics',
+                        Icons.bar_chart_rounded,
+                        AppColors.accent,
+                        const Color(0xFFFFD54F),
+                        AnalyticsScreen(),
                       ),
                       _buildMenuCard(
                         context,
                         'Staff',
-                        Icons.people_rounded,
+                        Icons.badge_rounded,
                         AppColors.secondary,
                         AppColors.secondaryLight,
-                        const StaffManagementScreen(),
+                        StaffManagementScreen(),
                       ),
-                      // _buildMenuCard(
-                      //   context,
-                      //   'New Sale',
-                      //   Icons.point_of_sale_rounded,
-                      //   AppColors.success,
-                      //   const Color(0xFF69F0AE),
-                      //   const CheckoutScreen(),
-                      // ),
-                      // _buildMenuCard(
-                      //   context,
-                      //   'Reports',
-                      //   Icons.bar_chart_rounded,
-                      //   AppColors.accent,
-                      //   const Color(0xFFFFD54F),
-                      //   const SalesSummaryScreen(),
-                      // ),
                     ]),
                   ),
                 ),
