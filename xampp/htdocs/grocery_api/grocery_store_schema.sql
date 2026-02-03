@@ -207,39 +207,7 @@ CREATE TABLE IF NOT EXISTS inventory_transactions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================
--- 11. PROMOTIONS TABLE
--- ============================================
-CREATE TABLE IF NOT EXISTS promotions (
-    promotion_id INT AUTO_INCREMENT PRIMARY KEY,
-    promotion_name VARCHAR(255) NOT NULL,
-    description TEXT,
-    discount_type ENUM('percentage', 'fixed') NOT NULL,
-    discount_value DECIMAL(10,2) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_dates (start_date, end_date),
-    INDEX idx_active (is_active)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ============================================
--- 12. PROMOTION_PRODUCTS TABLE (Junction)
--- ============================================
-CREATE TABLE IF NOT EXISTS promotion_products (
-    promotion_product_id INT AUTO_INCREMENT PRIMARY KEY,
-    promotion_id INT NOT NULL,
-    p_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (promotion_id) REFERENCES promotions(promotion_id) ON DELETE CASCADE,
-    FOREIGN KEY (p_id) REFERENCES products(p_id) ON DELETE CASCADE,
-    UNIQUE KEY unique_promotion_product (promotion_id, p_id),
-    INDEX idx_promotion (promotion_id),
-    INDEX idx_product (p_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ============================================
--- 13. REVIEWS TABLE
+-- 11. REVIEWS TABLE
 -- ============================================
 CREATE TABLE IF NOT EXISTS reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -256,7 +224,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================
--- 14. PAYMENT_TRANSACTIONS TABLE
+-- 12. PAYMENT_TRANSACTIONS TABLE
 -- ============================================
 CREATE TABLE IF NOT EXISTS payment_transactions (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -369,20 +337,6 @@ INSERT INTO cart_items (cart_item_id, cart_id, p_id, quantity) VALUES
 (5, 3, 1, 4),
 (6, 3, 6, 2)
 ON DUPLICATE KEY UPDATE cart_item_id=cart_item_id;
-
--- Promotions
-INSERT INTO promotions (promotion_id, promotion_name, description, discount_type, discount_value, start_date, end_date) VALUES 
-(1, 'Summer Sale', '20% off on all fruits', 'percentage', 20.00, '2026-06-01', '2026-08-31'),
-(2, 'Dairy Discount', '$2 off on dairy products', 'fixed', 2.00, '2026-01-01', '2026-12-31')
-ON DUPLICATE KEY UPDATE promotion_id=promotion_id;
-
--- Promotion Products
-INSERT INTO promotion_products (promotion_product_id, promotion_id, p_id) VALUES 
-(1, 1, 1),
-(2, 1, 2),
-(3, 2, 3),
-(4, 2, 7)
-ON DUPLICATE KEY UPDATE promotion_product_id=promotion_product_id;
 
 -- Reviews
 INSERT INTO reviews (review_id, p_id, customer_id, rating, review_text) VALUES 

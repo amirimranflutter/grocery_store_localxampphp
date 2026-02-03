@@ -1,7 +1,7 @@
 # Grocery Store Database Structure
 
 ## Overview
-This is a comprehensive relational database for a grocery store management system with 14 interconnected tables.
+This is a comprehensive relational database for a grocery store management system with 12 interconnected tables.
 
 ## Database Schema
 
@@ -120,24 +120,7 @@ This is a comprehensive relational database for a grocery store management syste
   - Many-to-One with products
   - Many-to-One with employees
 
-#### 12. **promotions**
-- Primary Key: `promotion_id`
-- Stores promotional campaigns
-- Fields: promotion_name, description, discount_type, discount_value, start_date, end_date
-- **Relationships**:
-  - One-to-Many with promotion_products
-
-#### 13. **promotion_products**
-- Primary Key: `promotion_product_id`
-- Junction table linking promotions and products
-- **Foreign Keys**:
-  - `promotion_id` → promotions(promotion_id) [CASCADE DELETE]
-  - `p_id` → products(p_id) [CASCADE DELETE]
-- **Relationships**:
-  - Many-to-One with promotions
-  - Many-to-One with products
-
-#### 14. **reviews**
+#### 11. **reviews**
 - Primary Key: `review_id`
 - Customer product reviews
 - Fields: rating (1-5), review_text
@@ -148,6 +131,8 @@ This is a comprehensive relational database for a grocery store management syste
   - Many-to-One with products
   - Many-to-One with customers
 
+#### 12. **payment_transactions**
+
 ## Key Relationships Summary
 
 ### Products (Central Hub)
@@ -156,7 +141,6 @@ This is a comprehensive relational database for a grocery store management syste
 - Products ← Order Items (One-to-Many)
 - Products ← Cart Items (One-to-Many)
 - Products ← Reviews (One-to-Many)
-- Products ← Promotion Products (One-to-Many)
 - Products ← Inventory Transactions (One-to-Many)
 
 ### Customers
@@ -206,9 +190,6 @@ This is a comprehensive relational database for a grocery store management syste
 ### Suppliers
 - GET `/suppliers/get_suppliers.php` - List suppliers with product count
 
-### Promotions
-- GET `/promotions/get_promotions.php` - List promotions with products
-
 ### Reports
 - GET `/reports/inventory_report.php` - Inventory analysis and low stock alerts
 - GET `/reports/sales_summary.php` - Sales analytics with date range
@@ -222,7 +203,7 @@ This is a comprehensive relational database for a grocery store management syste
 
 2. **This will create**:
    - Database: `grocerystore`
-   - 14 tables with proper relationships
+   - 12 tables with proper relationships
    - Sample data for testing
 
 3. **View in phpMyAdmin Designer**:
@@ -240,7 +221,6 @@ This is a comprehensive relational database for a grocery store management syste
 - 5 Customers
 - 5 Orders with 13 order items
 - 3 Carts with 6 cart items
-- 2 Promotions with 4 promotion products
 - 4 Product reviews
 - 5 Payment transactions
 
@@ -264,6 +244,6 @@ When you open the Designer in phpMyAdmin, you'll see:
 - **Right Side**: Orders, Cart, and Reviews branching from Products
 - **Bottom**: Customers connecting to Orders, Cart, and Reviews
 - **Top**: Employees connecting to Orders and Inventory
-- **Corners**: Promotions and Payment Transactions
+- **Corners**: Payment Transactions
 
 All relationship lines will be visible showing the complex interconnected structure!
