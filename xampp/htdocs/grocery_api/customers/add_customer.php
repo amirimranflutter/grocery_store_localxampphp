@@ -1,10 +1,13 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../config/db_connection.php';
+require_once __DIR__ . '/../config/db_connection.php';
 
 $conn = getDBConnection();
 
