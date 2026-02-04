@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:grocerystore_local/geroceryStore/screens/staff/staff_management.dart';
 import '../core/appColors.dart';
 import 'inventory/inventory.dart';
@@ -27,102 +28,107 @@ class DashboardScreen extends StatelessWidget {
     // Responsive max width for content
     final maxContentWidth = isDesktop ? 1200.0 : double.infinity;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxContentWidth),
-            child: CustomScrollView(
-              slivers: [
-                // Custom Header
-                SliverToBoxAdapter(
-                  child: _buildHeader(context, isDesktop),
-                ),
-                // Menu Section Title
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      isDesktop ? 32 : 20, 
-                      24, 
-                      isDesktop ? 32 : 20, 
-                      12
-                    ),
-                    child: const Text(
-                      'Quick Actions',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light),
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              child: CustomScrollView(
+                slivers: [
+                  // Custom Header
+                  SliverToBoxAdapter(
+                    child: _buildHeader(context, isDesktop),
+                  ),
+                  // Menu Section Title
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        isDesktop ? 32 : 20,
+                        24,
+                        isDesktop ? 32 : 20,
+                        12
+                      ),
+                      child: const Text(
+                        'Quick Actions',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // Menu Grid
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isDesktop ? 32 : 20,
-                  ),
-                  sliver: SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: isDesktop ? 1.2 : 1.1,
+                  // Menu Grid
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 32 : 20,
                     ),
-                    delegate: SliverChildListDelegate([
-                      _buildMenuCard(
-                        context,
-                        'Inventory',
-                        Icons.inventory_2_rounded,
-                        AppColors.primary,
-                        AppColors.primaryLight,
-                        InventoryScreen(),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: isDesktop ? 1.2 : 1.1,
                       ),
-                      _buildMenuCard(
-                        context,
-                        'Customers',
-                        Icons.people_rounded,
-                        const Color(0xFF9C27B0),
-                        const Color(0xFFCE93D8),
-                        CustomersScreen(),
-                      ),
-                      _buildMenuCard(
-                        context,
-                        'Orders',
-                        Icons.receipt_long_rounded,
-                        const Color(0xFF2196F3),
-                        const Color(0xFF64B5F6),
-                        OrdersScreen(),
-                      ),
-                      _buildMenuCard(
-                        context,
-                        'New Sale',
-                        Icons.point_of_sale_rounded,
-                        AppColors.success,
-                        const Color(0xFF69F0AE),
-                        CheckoutScreen(),
-                      ),
-                      _buildMenuCard(
-                        context,
-                        'Analytics',
-                        Icons.bar_chart_rounded,
-                        AppColors.accent,
-                        const Color(0xFFFFD54F),
-                        AnalyticsScreen(),
-                      ),
-                      _buildMenuCard(
-                        context,
-                        'Staff',
-                        Icons.badge_rounded,
-                        AppColors.secondary,
-                        AppColors.secondaryLight,
-                        StaffManagementScreen(),
-                      ),
-                    ]),
+                      delegate: SliverChildListDelegate([
+                        _buildMenuCard(
+                          context,
+                          'Inventory',
+                          Icons.inventory_2_rounded,
+                          AppColors.primary,
+                          AppColors.primaryLight,
+                          InventoryScreen(),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          'Customers',
+                          Icons.people_rounded,
+                          const Color(0xFF9C27B0),
+                          const Color(0xFFCE93D8),
+                          CustomersScreen(),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          'Orders',
+                          Icons.receipt_long_rounded,
+                          const Color(0xFF2196F3),
+                          const Color(0xFF64B5F6),
+                          OrdersScreen(),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          'New Sale',
+                          Icons.point_of_sale_rounded,
+                          AppColors.success,
+                          const Color(0xFF69F0AE),
+                          CheckoutScreen(),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          'Analytics',
+                          Icons.bar_chart_rounded,
+                          AppColors.accent,
+                          const Color(0xFFFFD54F),
+                          AnalyticsScreen(),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          'Staff',
+                          Icons.badge_rounded,
+                          AppColors.secondary,
+                          AppColors.secondaryLight,
+                          StaffManagementScreen(),
+                        ),
+                      ]),
+                    ),
                   ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 24)),
-              ],
+                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                ],
+              ),
             ),
           ),
         ),
