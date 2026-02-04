@@ -61,9 +61,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
         title: const Text('Analytics & Reports'),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.grey.shade200,
+          unselectedLabelColor: Colors.black,
           tabs: const [
-            Tab(icon: Icon(Icons.trending_up), text: 'Sales'),
-            Tab(icon: Icon(Icons.inventory), text: 'Inventory'),
+            Tab(icon: Icon(Icons.trending_up, color: Colors.white,), text: 'Sales'),
+            Tab(icon: Icon(Icons.inventory, color: Colors.white,), text: 'Inventory'),
           ],
         ),
         actions: [
