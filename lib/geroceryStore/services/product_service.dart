@@ -20,8 +20,8 @@ class ProductService {
       } else {
         throw Exception('Failed to load products');
       }
-    } catch (e) {
-      print("Error: $e");
+    } catch (e, s) {
+      print("Error: $e, $s");
       return []; // Return empty list on error
     }
   }
